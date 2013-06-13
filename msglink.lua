@@ -6,7 +6,7 @@ function test(serverConnectionHandlerID)
 	local myClientID = ts3.getClientID(serverConnectionHandlerID)
 	local myChannelID = ts3.getChannelOfClient(serverConnectionHandlerID, myClientID)
 	local myOS = " "
-	local fileHandle = io.open("/etc/")
+	local fileHandle = io.open("/home/")
 	if fileHandle ~= nil then
 		io.close(fileHandle)
 		myOS = "Linux"
@@ -16,7 +16,7 @@ function test(serverConnectionHandlerID)
 			io.close(fileHandle)
 			myOS = "Windows"
 		else
-			fileHandle = io.open("/home/")
+			fileHandle = io.open("/Applications/")
 			if fileHandle ~= nil then
 				io.close(fileHandle)
 				myOS = "Mac"
@@ -32,11 +32,14 @@ function test(serverConnectionHandlerID)
 		file = io.popen("echo $(xclip -o)")
 		
 	elseif myOS == "Mac" then
-		file = io.popen("echo 'pbpaste'")
+		file = io.popen("echo $(pbpaste)")
 	end
 
 	message = string.sub(file:read("*a"), 1, -2)
-	message = "[url]"..message.."[/url]"
+
+	if string.sub(message, 1, 7) == "http://" or string.sub(message, 1, 8) == "https://" then
+		message = "[url]"..message.."[/url]"
+	end
 
 	ts3.requestSendChannelTextMsg(serverConnectionHandlerID, message, myChannelID)
 end

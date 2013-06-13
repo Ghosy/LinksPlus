@@ -1,6 +1,6 @@
 require("ts3init")
-require("Links-Plus/msglink")
+require("LinksPlus/msglink")
 
-local MODULE_NAME = Links-Plus
+local MODULE_NAME = "LinksPlus"
 
 ts3RegisterModule(MODULE_NAME, registeredEvents)

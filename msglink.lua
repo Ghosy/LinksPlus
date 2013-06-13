@@ -30,7 +30,6 @@ function test(serverConnectionHandlerID)
 		file = io.popen("echo $(clipboard.exe)")
 	elseif myOS == "Linux" then
 		file = io.popen("echo $(xclip -o)")
-		
 	elseif myOS == "Mac" then
 		file = io.popen("echo $(pbpaste)")
 	end
@@ -44,6 +43,6 @@ function test(serverConnectionHandlerID)
 	ts3.requestSendChannelTextMsg(serverConnectionHandlerID, message, myChannelID)
 end
 
-linkplus = {
+LinksPlus = {
 	test = test
 }

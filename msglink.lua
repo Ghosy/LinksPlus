@@ -27,7 +27,7 @@ function test(serverConnectionHandlerID)
 	local file
 
 	if myOS == "Windows" then
-		os.execute("clipboard.exe temp")
+		file = io.popen("echo $(clipboard.exe)")
 	elseif myOS == "Linux" then
 		file = io.popen("echo $(xclip -o)")
 		

@@ -5,7 +5,7 @@ A TS3 lua plugin to improve ease of links.
 
 Installation:
 
-1.Place the Repo /LinksPlus/ in the area that matches your system.
+1. Place the Repo /LinksPlus/ in the area that matches your system.
     Windows: C:\Program Files\TeamSpeak 3 Client\plugins\lua_plugin\
     Mac: /TeamSpeak 3 Client.app/Contents/SharedSupport/plugins/lua_plugin/LinksPlus
     Linux: /opt/teamspeak3/plugins/lua_plugin/

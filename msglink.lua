@@ -2,7 +2,7 @@ require("ts3defs")
 require("ts3errors")
 
 function test(serverConnectionHandlerID)
-	local message = "[url]http://test.com/[/url]" 
+	local message = " "
 	local myClientID = ts3.getClientID(serverConnectionHandlerID)
 	local myChannelID = ts3.getChannelOfClient(serverConnectionHandlerID, myClientID)
 	local myOS = " "
@@ -11,8 +11,7 @@ function test(serverConnectionHandlerID)
 		io.close(fileHandle)
 		myOS = "Linux"
 	else
-		fileHandle = io.open("C:/Windows/")
-		if fileHandle ~= nil then
+		if string.sub(package.config, 1, 1) == "\\" then
 			io.close(fileHandle)
 			myOS = "Windows"
 		else
@@ -24,17 +23,25 @@ function test(serverConnectionHandlerID)
 		end
 	end
 
-	local file
-
-	if myOS == "Windows" then
-		file = io.popen("echo $(clipboard.exe)")
-	elseif myOS == "Linux" then
-		file = io.popen("echo $(xclip -o)")
-	elseif myOS == "Mac" then
-		file = io.popen("echo $(pbpaste)")
+	if myOS == " " then
+		ts3.printMessageToCurrentTab("OS could not be determined")
 	end
 
-	message = string.sub(file:read("*a"), 1, -2)
+	local clipboard
+
+	if myOS == "Windows" then
+		clipboard = io.popen("clipboard.exe")
+	elseif myOS == "Linux" then
+		clipboard = io.popen("echo $(xclip -o)")
+	elseif myOS == "Mac" then
+		clipboard = io.popen("echo $(pbpaste)")
+	end
+
+	if clipboard ~= nil then
+		message = string.sub(clipboard:read("*a"), 1, -2)
+	else
+		ts3.printMessageToCurrentTab("Nothing was found on your clipboard")
+	end
 
 	if string.sub(message, 1, 7) == "http://" or string.sub(message, 1, 8) == "https://" then
 		message = "[url]"..message.."[/url]"

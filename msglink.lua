@@ -1,32 +1,31 @@
 require("ts3defs")
 require("ts3errors")
 
+lastURL = " "
+myOS = " "
+local fileHandle = io.open("/home/")
+if fileHandle ~= nil then
+	io.close(fileHandle)
+	myOS = "Linux"
+else
+	if string.sub(package.config, 1, 1) == "\\" then
+		myOS = "Windows"
+	else
+		fileHandle = io.open("/Applications/")
+		if fileHandle ~= nil then
+			io.close(fileHandle)
+			myOS = "Mac"
+		end
+	end
+end
+if myOS == " " then
+	ts3.printMessageToCurrentTab("OS could not be determined")
+end
+
 function test(serverConnectionHandlerID)
 	local message = " "
 	local myClientID = ts3.getClientID(serverConnectionHandlerID)
 	local myChannelID = ts3.getChannelOfClient(serverConnectionHandlerID, myClientID)
-	local myOS = " "
-	local fileHandle = io.open("/home/")
-	if fileHandle ~= nil then
-		io.close(fileHandle)
-		myOS = "Linux"
-	else
-		if string.sub(package.config, 1, 1) == "\\" then
-			io.close(fileHandle)
-			myOS = "Windows"
-		else
-			fileHandle = io.open("/Applications/")
-			if fileHandle ~= nil then
-				io.close(fileHandle)
-				myOS = "Mac"
-			end
-		end
-	end
-
-	if myOS == " " then
-		ts3.printMessageToCurrentTab("OS could not be determined")
-	end
-
 	local clipboard
 
 	if myOS == "Windows" then
@@ -50,6 +49,27 @@ function test(serverConnectionHandlerID)
 	ts3.requestSendChannelTextMsg(serverConnectionHandlerID, message, myChannelID)
 end
 
+function receiveMsg(message)
+	message = message:lower()
+	if string.find(message, "%[url%]") ~= nil and string.find(message, "%[/url%]") ~= nil then
+		lastURL = string.match(message, '%[url%].-%[/url%]')
+		lastURL = string.sub(lastURL, 6, -7)
+		return lastURL
+	end
+end
+
+function openLastURL()
+	if myOS == "Linux" then
+		os.execute("xdg-open "..lastURL)
+	elseif myOS == "Windows" then
+		os.execute("start "..lastURL)
+	elseif myOS == "Mac" then
+		os.execute("open "..lastURL)
+	end
+end
+
 LinksPlus = {
-	test = test
+	test = test,
+	receiveMsg = receiveMsg,
+	openLastURL = openLastURL
 }

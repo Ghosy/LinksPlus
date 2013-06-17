@@ -50,9 +50,8 @@ function test(serverConnectionHandlerID)
 end
 
 function receiveMsg(message)
-	message = message:lower()
-	if string.find(message, "%[url%]") ~= nil and string.find(message, "%[/url%]") ~= nil then
-		lastURL = string.match(message, '%[url%].-%[/url%]')
+	if string.find(message, "%[[uU][rR][lL]%]") ~= nil and string.find(message, "%[/[uU][rR][lL]%]") ~= nil then
+		lastURL = string.match(message, '%[[uU][rR][lL]%].-%[/[uU][rR][lL]%]')
 		lastURL = string.sub(lastURL, 6, -7)
 		return lastURL
 	end
